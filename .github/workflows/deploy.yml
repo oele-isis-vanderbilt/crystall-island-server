@@ -1,24 +1,21 @@
-name: Deploy to Jetstream / Docker Cleanup
+name: Deploy to Jetstream
 
 on:
   push:
     branches:
       - main
 
-  release: # Trigger the workflow on release events
-    types: [published]
-
   schedule:
     - cron: '0 0 * * *' # Run every day at 00:00 UTC
 
 jobs:
   DeployToEC2:
-    name: Deploy API to JetStream2 (Dev/Prod)
+    name: Deploy Crystall Island to JetStream2 (Dev/Prod)
     runs-on: "ubuntu-latest"
 
     steps:
       - uses: actions/checkout@v4
-      - name: Build and Deploy (dev.syncflow.live)
+      - name: Build and Deploy (crystall-island.syncflow.live)
         if: github.event_name == 'push'
         env:
           PRIVATE_KEY: ${{ secrets.JETSTREAM2_PRIV_KEY_PEM }}
