@@ -1,0 +1,16 @@
+[package]
+name = "crystall-island-server"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-files = "0.6.6"
+actix-web = "4.9.0"
+syncflow_client = { git = "https://github.com/oele-isis-vanderbilt/SyncFlow.git", branch = "main", package="client" }
+syncflow_shared = { git = "https://github.com/oele-isis-vanderbilt/SyncFlow.git", branch = "main", package="shared" }
+livekit = { git="https://github.com/livekit/rust-sdks.git", package="livekit", features = ["rustls-tls-native-roots"] }
+livekit-runtime = { version = "0.3.0", features = ["tokio"] }
+livekit-api = {git="https://github.com/livekit/rust-sdks.git", package="livekit-api" }
+livekit-protocol = "0.3.5"
+env_logger = "0.11.5"
+serde = { version = "1.0.214", features = ["derive"] }
