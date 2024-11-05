@@ -1,3 +1,4 @@
 /target
 EngageAI-NLEPrototype
 .env
+.env.prod

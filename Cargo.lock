@@ -654,6 +654,7 @@ dependencies = [
  "livekit-api 0.4.1 (git+https://github.com/livekit/rust-sdks.git)",
  "livekit-protocol 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "livekit-runtime 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log",
  "serde",
  "shared",
 ]

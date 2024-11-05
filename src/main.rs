@@ -11,6 +11,7 @@ use syncflow_shared::response_models::Response;
 use syncflow_shared::{livekit_models::TokenRequest, utils::load_env};
 
 use actix_files as fs;
+use log;
 use std::env;
 
 use actix_web::HttpResponse;
@@ -35,6 +36,7 @@ impl From<MinimalTokenRequest> for NewSessionRequest {
             name: Some(value.room_name),
             auto_recording: Some(true),
             max_participants: Some(200),
+            device_groups: Some(vec!["text-egress".to_string()]),
             ..Default::default()
         }
     }
@@ -45,6 +47,7 @@ async fn get_token(
     client: web::Data<ProjectClient>,
     token_request: web::Json<MinimalTokenRequest>,
 ) -> actix_web::HttpResponse {
+    log::info!("Requesting token, {:#?}", token_request);
     let sessions_result = client.get_sessions().await;
     let token_request = token_request.into_inner();
     let identity = token_request.identity.clone();
@@ -52,9 +55,9 @@ async fn get_token(
 
     let res = match sessions_result {
         Ok(sessions) => {
-            let session = sessions
-                .iter()
-                .find(|session| session.name == token_request.room_name);
+            let session = sessions.iter().find(|session| {
+                session.name == token_request.room_name && session.status != "Stopped"
+            });
             match session {
                 Some(session) => {
                     let token = client
@@ -80,7 +83,6 @@ async fn get_token(
                 None => {
                     let new_session_req = token_request.into();
                     let new_session = client.create_session(&new_session_req).await;
-
                     match new_session {
                         Ok(session) => {
                             let token = client
@@ -110,13 +112,17 @@ async fn get_token(
         }
         Err(_e) => HttpResponse::InternalServerError().finish(),
     };
+    log::info!("Token Response {:#?}", res);
     res
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     load_env();
-    env::set_var("RUST_LOG", "actix_web=debug");
+    env::set_var(
+        "RUST_LOG",
+        "actix_web=debug,actix_files=debug,crystall_island_server=debug",
+    );
     env_logger::init();
     let project_id = env::var("SYNCFLOW_PROJECT_ID").expect("PROJECT_ID must be set");
     let api_key = env::var("SYNCFLOW_API_KEY").expect("API_KEY must be set");
@@ -128,9 +134,10 @@ async fn main() -> std::io::Result<()> {
     let port = 9000;
     let host = "0.0.0.0";
     let app_data = web::Data::new(client);
-
+    log::info!("Starting server on {}:{}", host, port);
     HttpServer::new(move || {
         App::new()
+            .wrap(actix_web::middleware::Logger::default())
             .service(get_token)
             .service(
                 fs::Files::new("/", "./EngageAI-NLEPrototype")

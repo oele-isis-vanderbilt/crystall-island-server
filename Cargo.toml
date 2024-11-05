@@ -14,3 +14,4 @@ livekit-api = {git="https://github.com/livekit/rust-sdks.git", package="livekit-
 livekit-protocol = "0.3.5"
 env_logger = "0.11.5"
 serde = { version = "1.0.214", features = ["derive"] }
+log = "0.4.22"
