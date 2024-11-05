@@ -25,6 +25,7 @@ pub fn error_response(e: impl Into<Response>) -> HttpResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct MinimalTokenRequest {
     pub identity: String,
     pub room_name: String,
