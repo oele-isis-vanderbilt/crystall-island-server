@@ -147,6 +147,7 @@ async fn main() -> std::io::Result<()> {
             )
             .app_data(app_data.clone())
     })
+    .workers(4)
     .bind(&format!("{}:{}", host, port))?
     .run()
     .await
