@@ -11,7 +11,6 @@ use syncflow_shared::response_models::Response;
 use syncflow_shared::{livekit_models::TokenRequest, utils::load_env};
 
 use actix_files as fs;
-use log;
 use std::env;
 
 use actix_web::HttpResponse;
@@ -70,6 +69,8 @@ async fn get_token(
                                 video_grants: VideoGrantsWrapper {
                                     can_publish: true,
                                     can_subscribe: true,
+                                    room_join: true,
+                                    room_create: true,
                                     room: room_name.clone(),
                                     ..Default::default()
                                 },
@@ -95,6 +96,8 @@ async fn get_token(
                                         video_grants: VideoGrantsWrapper {
                                             can_publish: true,
                                             can_subscribe: true,
+                                            room_join: true,
+                                            room_create: true,
                                             room: room_name.clone(),
                                             ..Default::default()
                                         },
@@ -113,7 +116,7 @@ async fn get_token(
         }
         Err(_e) => HttpResponse::InternalServerError().finish(),
     };
-    log::info!("Token Response {:#?}", res);
+    log::info!("Token Response {:#?}", res.body());
     res
 }
 
