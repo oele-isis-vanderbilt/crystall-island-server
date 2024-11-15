@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Build and Deploy (crystall-island.syncflow.live)
+      - name: Build and Deploy (crystall-island/ecojourneys.syncflow.live)
         if: github.event_name == 'push'
         env:
           PRIVATE_KEY: ${{ secrets.JETSTREAM2_PRIV_KEY_PEM }}
@@ -35,18 +35,7 @@ jobs:
             docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml build
             docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml down
             docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml up -d
-          '
-
-      - name: Build and Deploy (ecojourneys.syncflow.live)
-        if : github.event_name == 'push'
-        env:
-          PRIVATE_KEY: ${{ secrets.JETSTREAM2_PRIV_KEY_PEM }}
-          HOST: ${{ secrets.JETSTREAM2_HOST }}
-          USERNAME: ${{ secrets.JETSTREAM2_USERNAME }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh-keygen -y -f private_key > /dev/null
-          ssh -o StrictHostKeyChecking=no -i private_key ${USERNAME}@${HOST} '
+            
             cd $HOME/EcoJourneysDeployment
             rm -rf crystall-island-server
             git clone git@github.com:oele-isis-vanderbilt/crystall-island-server.git
@@ -56,3 +45,4 @@ jobs:
             docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml build
             docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml down
             docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml up -d
+          '
