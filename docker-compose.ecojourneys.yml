@@ -1,8 +1,8 @@
 services:
   game:
     build: .
-    image: crystall-island-server
-    container_name: crystall-island-server
+    image: ecojourneys-server
+    container_name: ecojourneys-server
     env_file:
       - .env.prod
     volumes:
