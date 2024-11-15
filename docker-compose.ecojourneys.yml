@@ -1,0 +1,11 @@
+services:
+  game:
+    build: .
+    image: ecojourneys-server
+    container_name: ecojourneys-server
+    env_file:
+      - .env.prod
+    volumes:
+      - ./EngageAI-NLEPrototype:/app/EngageAI-NLEPrototype
+    ports:
+      - 8000:9000

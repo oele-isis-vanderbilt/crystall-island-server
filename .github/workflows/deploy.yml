@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Build and Deploy (crystall-island.syncflow.live)
+      - name: Build and Deploy (crystall-island/ecojourneys.syncflow.live)
         if: github.event_name == 'push'
         env:
           PRIVATE_KEY: ${{ secrets.JETSTREAM2_PRIV_KEY_PEM }}
@@ -30,7 +30,16 @@ jobs:
             git clone git@github.com:oele-isis-vanderbilt/crystall-island-server.git 
             cp .env crystall-island-server/.env.prod
             cp -r EngageAI-NLEPrototype crystall-island-server/EngageAI-NLEPrototype
-            docker compose -p crystall-island-server -f crystall-island-server/docker-compose.yml build
-            docker compose -p crystall-island-server -f crystall-island-server/docker-compose.yml down
-            docker compose -p crystall-island-server -f crystall-island-server/docker-compose.yml up -d
+            docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml build
+            docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml down
+            docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml up -d
+            
+            cd $HOME/EcoJourneysDeployment
+            rm -rf crystall-island-server
+            git clone git@github.com:oele-isis-vanderbilt/crystall-island-server.git
+            cp .env crystall-island-server/.env.prod
+            cp -r EngageAI-NLEPrototype crystall-island-server/EngageAI-NLEPrototype
+            docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml build
+            docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml down
+            docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml up -d
           '
