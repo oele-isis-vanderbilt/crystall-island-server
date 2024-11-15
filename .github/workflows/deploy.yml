@@ -39,6 +39,10 @@ jobs:
 
       - name: Build and Deploy (ecojourneys.syncflow.live)
         if : github.event_name == 'push'
+        env:
+          PRIVATE_KEY: ${{ secrets.JETSTREAM2_PRIV_KEY_PEM }}
+          HOST: ${{ secrets.JETSTREAM2_HOST }}
+          USERNAME: ${{ secrets.JETSTREAM2_USERNAME }}
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh-keygen -y -f private_key > /dev/null

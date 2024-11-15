@@ -1,2 +1,5 @@
 ## Crystall Island Deployment
-Syncflow Integrated Version of Crystall Island.
+SyncFlow Integrated Version of Crystall Island and EcoJourneys.
+
+- **Crystall Island**: https://crystall-island.syncflow.live/
+- **EcoJourneys**: https://ecojourneys.syncflow.live/
