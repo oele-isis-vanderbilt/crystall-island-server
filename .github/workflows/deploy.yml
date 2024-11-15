@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - deploy-ecojourneys
 
   schedule:
     - cron: '0 0 * * *' # Run every day at 00:00 UTC
@@ -29,7 +28,6 @@ jobs:
             cd $HOME/CrystallIslandDeployment
             rm -rf crystall-island-server
             git clone git@github.com:oele-isis-vanderbilt/crystall-island-server.git 
-            cd crystall-island-server && git checkout -b deploy-ecojourneys origin/deploy-ecojourneys && cd ..
             cp .env crystall-island-server/.env.prod
             cp -r EngageAI-NLEPrototype crystall-island-server/EngageAI-NLEPrototype
             docker compose -p crystall-island-server -f crystall-island-server/docker-compose.crystall-island.yml build
@@ -39,7 +37,6 @@ jobs:
             cd $HOME/EcoJourneysDeployment
             rm -rf crystall-island-server
             git clone git@github.com:oele-isis-vanderbilt/crystall-island-server.git
-            cd crystall-island-server && git checkout -b deploy-ecojourneys origin/deploy-ecojourneys && cd ..
             cp .env crystall-island-server/.env.prod
             cp -r EngageAI-NLEPrototype crystall-island-server/EngageAI-NLEPrototype
             docker compose -p ecojourneys-server -f crystall-island-server/docker-compose.ecojourneys.yml build
