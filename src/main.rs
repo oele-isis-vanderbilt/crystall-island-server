@@ -1,4 +1,6 @@
 use actix_web::{
+    dev::Service,
+    http::header::{HeaderValue, CONTENT_ENCODING},
     post,
     web::{self},
     App, HttpServer,
@@ -143,6 +145,18 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(actix_web::middleware::Logger::default())
             .service(get_token)
+            .wrap_fn(|req, srv| {
+                let path = req.path().to_string();
+                let fut = srv.call(req);
+                Box::pin(async move {
+                    let mut res = fut.await?;
+                    if path.ends_with(".gz") {
+                        res.headers_mut()
+                            .insert(CONTENT_ENCODING, HeaderValue::from_static("gzip"));
+                    }
+                    Ok(res)
+                })
+            })
             .service(
                 fs::Files::new("/", "./EngageAI-NLEPrototype")
                     .show_files_listing()
