@@ -30,6 +30,17 @@ pub fn error_response(e: impl Into<Response>) -> HttpResponse {
 pub struct MinimalTokenRequest {
     pub identity: String,
     pub room_name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub group: Option<String>,
+}
+
+impl MinimalTokenRequest {
+    fn get_final_identity(&self) -> String {
+        match &self.group {
+            Some(group) => format!("{}-{}", self.identity, group),
+            None => self.identity.clone(),
+        }
+    }
 }
 
 impl From<MinimalTokenRequest> for NewSessionRequest {
@@ -52,7 +63,7 @@ async fn get_token(
     log::info!("Requesting token, {:#?}", token_request);
     let sessions_result = client.get_sessions().await;
     let token_request = token_request.into_inner();
-    let identity = token_request.identity.clone();
+    let identity = token_request.get_final_identity();
     let room_name = token_request.room_name.clone();
 
     let res = match sessions_result {
